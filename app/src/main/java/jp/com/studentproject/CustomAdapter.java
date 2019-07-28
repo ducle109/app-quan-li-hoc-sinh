@@ -15,40 +15,38 @@ import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter<Student> {
     private Context context;
-    private int resoure;
+    private int layout;
     private List<Student> listStudent;
 
-    public CustomAdapter(Context context, int resource) {
-        super(context, resource);
-    }
-
-
-    public CustomAdapter(Context context, int resource, List<Student> objects) {
-        super(context, resource, objects);
+    public CustomAdapter(Context context, int layout, List<Student> objects) {
+        super(context, layout, objects);
         this.context = context;
-        this.resoure = resoure;
+        this.layout = layout;
         this.listStudent = objects;
     }
 
-
-
     @SuppressLint("SetTextI18n")
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+        // ViewHolderを作ります
         ViewHolder viewHolder;
-        if(convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.show_all_student, parent, false);
+        // View＝Nullの場合は新しいviewを作る（1 view = 1 dòng）
+        if(view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.show_all_student, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.tvId                         = (TextView)convertView.findViewById(R.id.tv_id);
-            viewHolder.tvName                       = (TextView)convertView.findViewById(R.id.tv_name);
-            viewHolder.tvAge                        = (TextView)convertView.findViewById(R.id.tv_age);
-            viewHolder.tvSex                        = (TextView)convertView.findViewById(R.id.tv_sex);
-            viewHolder.tvPhone                     = (TextView)convertView.findViewById(R.id.tv_phone);
+            viewHolder.tvId                         = (TextView)view.findViewById(R.id.tv_id);
+            viewHolder.tvName                       = (TextView)view.findViewById(R.id.tv_name);
+            viewHolder.tvAge                        = (TextView)view.findViewById(R.id.tv_age);
+            viewHolder.tvSex                        = (TextView)view.findViewById(R.id.tv_sex);
+            viewHolder.tvPhone                     = (TextView)view.findViewById(R.id.tv_phone);
 
-            convertView.setTag(viewHolder);
+            // 作ったviewはViewHolderに渡します。
+            view.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            // ViewHolderがあった場合はそのまま表示させる。
+            viewHolder = (ViewHolder) view.getTag();
         }
+        // Classから値を入れる。
         Student student = listStudent.get(position);
         viewHolder.tvId.setText(String.valueOf(student.getId()));
         viewHolder.tvName.setText(student.getName());
@@ -56,13 +54,11 @@ public class CustomAdapter extends ArrayAdapter<Student> {
         viewHolder.tvSex.setText(student.getSex() + "");
         viewHolder.tvPhone.setText(student.getPhoneNumber() + "");
 
-        return convertView;
+        // 値を返す。
+        return view;
     }
 
-
-
     public class ViewHolder {
-
         private TextView tvId;
         private TextView tvName;
         private TextView tvAge;

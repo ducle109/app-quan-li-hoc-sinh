@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">StudentProject</string>
+    
+    <string name="list_function_title">Student Management System</string>
+    <string name="list_function_add"><![CDATA[A, U, D —> Student]]></string>
+    <string name="list_function_show">Show All List Student</string>
+    <string name="list_function_search">Search A Student</string>
+    <string name="list_function_Timetable">School Timetable</string>
+
     <string name="add_student_title">ADD NEW A STUDENT</string>
     <string name="add_student_id">ID</string>
     <string name="add_student_name">Name</string>
@@ -13,7 +20,11 @@
     <string name="add_student_delete">Delete</string>
 
 
-    <string name="list_student_title">List Of All Students</string>
+    <string name="show_list_student_title">List Of All Students</string>
+    <string name="show_list_student_id">1</string>
+    <string name="show_list_student_name">Le Duc</string>
+    <string name="show_list_student_age">22</string>
+    <string name="show_list_student_phone">080-5324-5796</string>
     <string name="list_student_telephone">Telephone</string>
 
 
@@ -27,7 +38,7 @@
     <string name="school_time_notification">Click on long the value to change</string>
     <string name="school_time_editButton">Edit Time</string>
     <string name="school_time_cancelButton">Cancel</string>
-    <string name="school_time_day">AM\nPM</string>
+    <string name="school_time_day">AM/PM</string>
     <string name="school_time_time">時間</string>
     <string name="school_time_monday">月曜日</string>
     <string name="school_time_tuesday">火曜日</string>

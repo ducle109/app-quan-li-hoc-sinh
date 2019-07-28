@@ -11,11 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".EspressoDemo"></activity>
         <activity android:name=".School_Schedule" />
         <activity android:name=".SearchStudent" />
         <activity android:name=".ShowAllListStudent" />
-        <activity
-            android:name=".Student_Management" />
+        <activity android:name=".Student_Management" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

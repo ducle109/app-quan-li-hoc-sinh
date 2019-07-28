@@ -150,7 +150,6 @@ public class ShowAllListStudent extends AppCompatActivity implements View.OnClic
                  edtGrade.requestFocus();
                  showToast("edit ok grade");
                 break;
-
         }
     }
 
@@ -165,7 +164,6 @@ public class ShowAllListStudent extends AppCompatActivity implements View.OnClic
     }
 
     public void init() {
-
         lvShowStudent = (ListView) findViewById(R.id.lvShowStudent);
     }
 

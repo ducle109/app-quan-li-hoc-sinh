@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout android:clickable="true"
+<TableLayout xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/tbLayout"
@@ -8,18 +9,17 @@
     android:shrinkColumns="*"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <TableRow
-            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
             <Button
                 android:id="@+id/btnDay"
                 android:textSize="10sp"
-                android:clickable="true"
                 android:layout_width="match_parent"
                 android:background="@drawable/custom_button"
                 android:layout_height="wrap_content"
-                android:text="AM/PM" />
+                android:text="AM/PM"
+                tools:ignore="SmallSp" />
 
             <Button
                 android:id="@+id/btnTime"

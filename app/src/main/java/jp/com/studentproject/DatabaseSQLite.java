@@ -42,7 +42,6 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
     private static final String SUBJECTS_FRIDAY = "subjects_friday";
     private static final String TIME = "time";
 
-    private CustomAdapter customAdapter;
     private Context context;
     // create database
     public DatabaseSQLite(Context context) {
@@ -88,6 +87,8 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         db.execSQL(createStudent());
         Toast.makeText(context, "Create successfylly", Toast.LENGTH_SHORT).show();
     }
+
+    // Tableに何か追加するときとか削除するときとか。この関数に入ります
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);

@@ -32,11 +32,10 @@ public class Student_Management extends AppCompatActivity {
     private Button btnUpdate;
     private Button btnDelete;
     private Button btnCancel;
-    private RadioGroup radioGroupCharacter;
     private RadioButton radioButtonMale;
     private RadioButton radioButtonFemale;
 
-    private DatabaseSQLite databaseSQLite;
+    public static DatabaseSQLite databaseSQLite;
     private CustomAdapter customAdapter;
     private List<Student> studentList;
 
@@ -47,7 +46,6 @@ public class Student_Management extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student__management);
-
         databaseSQLite = new DatabaseSQLite(this);
         initWidget();
         studentList = databaseSQLite.getAllStudent();
@@ -102,27 +100,27 @@ public class Student_Management extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                Student student = new Student();
-                student.setId(Integer.parseInt(String.valueOf(editId.getText())));
-                student.setName(editName.getText() + "");
-                student.setAge(Integer.parseInt(editAge.getText() + ""));
-                if(radioButtonMale.isChecked()) {
-                    student.setSex("Male");
-                } else {
-                    student.setSex("Famle");
-                }
-                student.setPhoneNumber(editPhone.getText() + "");
-                int result = databaseSQLite.updateStudent(student);
-                showToast("Updated !!!");
-                if(result > 0) {
-                    updateListStudent();
-                    setTextNull();
+            Student student = new Student();
+            student.setId(Integer.parseInt(String.valueOf(editId.getText())));
+            student.setName(editName.getText() + "");
+            student.setAge(Integer.parseInt(editAge.getText() + ""));
+            if(radioButtonMale.isChecked()) {
+                student.setSex("Male");
+            } else {
+                student.setSex("Famle");
+            }
+            student.setPhoneNumber(editPhone.getText() + "");
+            int result = databaseSQLite.updateStudent(student);
+            showToast("Updated !!!");
+            if(result > 0) {
+                updateListStudent();
+                setTextNull();
 
-                }
-                btnSave.setEnabled(true);
-                btnUpdate.setEnabled(false);
-                btnDelete.setEnabled(false);
-                hidenKeyBoard();
+            }
+            btnSave.setEnabled(true);
+            btnUpdate.setEnabled(false);
+            btnDelete.setEnabled(false);
+            hidenKeyBoard();
             }
         });
 
@@ -156,10 +154,11 @@ public class Student_Management extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Student student = studentList.get(pos);
+                student.setId(Integer.parseInt(String.valueOf(editId.getText())));
                 int result = databaseSQLite.deleteStudent(student.getId());
-                Student student1 = new Student();
-                student1.setId(Integer.parseInt(String.valueOf(editId.getText())));
-                databaseSQLite.updateStudentIDD(student1);
+                // 消したIDの後は1個ずつIDを下げさせる
+                databaseSQLite.updateStudentIDD(student);
+                // 長さが１つ減らす
                 databaseSQLite.updateID();
                 showToast("Deleted !!!");
                 if(result > 0) {
@@ -245,7 +244,6 @@ public class Student_Management extends AppCompatActivity {
         btnDelete                = (Button) findViewById(R.id.btn_delete);
         btnCancel                = (Button) findViewById(R.id.btn_cancel);
 
-        radioGroupCharacter    = (RadioGroup) findViewById(R.id.radioGroup_character);
         radioButtonMale         = (RadioButton) findViewById(R.id.radioButton_male);
         radioButtonFemale       = (RadioButton) findViewById(R.id.radioButton_female);
 

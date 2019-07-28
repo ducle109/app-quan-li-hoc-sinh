@@ -52,7 +52,7 @@
                 tools:layout_editor_absoluteX="6dp"
                 tools:layout_editor_absoluteY="127dp"
                 android:contentDescription="TODO"
-                tools:ignore="ContentDescription,HardcodedText" />
+                tools:ignore="ContentDescription,HardcodedText,RtlHardcoded" />
 
             <Button
                 android:id="@+id/btnSearch"
@@ -64,7 +64,8 @@
                 android:layout_marginRight="50dp"
                 android:text="@string/search_student_search"
                 tools:layout_editor_absoluteX="279dp"
-                tools:layout_editor_absoluteY="43dp" />
+                tools:layout_editor_absoluteY="43dp"
+                tools:ignore="RtlHardcoded" />
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/txtDisplay"
@@ -78,37 +79,42 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="ID"
+                android:text="@string/add_student_id"
                 android:layout_weight="1"
-                android:paddingLeft="5dp"/>
+                android:paddingLeft="5dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="@string/add_student_name"
                 android:layout_weight="5"
-                android:paddingLeft="5dp" />
+                android:paddingLeft="5dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Age"
+                android:text="@string/add_student_age"
                 android:layout_weight="1"
-                android:paddingLeft="5dp"/>
+                android:paddingLeft="5dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Sex"
+                android:text="@string/add_student_sex"
                 android:layout_weight="2"
-                android:paddingLeft="5dp"/>
+                android:paddingLeft="5dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Telephone"
+                android:text="@string/list_student_telephone"
                 android:layout_weight="3"
-                android:paddingLeft="5dp"/>
+                android:paddingLeft="5dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry"/>
 
         </LinearLayout>
         <ListView
