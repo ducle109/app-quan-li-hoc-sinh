@@ -1,17 +1,14 @@
 package jp.com.studentproject;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseSQLite extends SQLiteOpenHelper {
@@ -60,8 +57,7 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
                 AGE                  + " INTEGER, " +
                 SEX                  + " TEXT, " +
                 PHONENUMBER         + " INTEGER, " +
-                IMGAVATAR           + " BLOB, " +
-                DATE                 + " DATE, " +
+                DATE                 + " NUMERIC, " +
                 STUDENTCLASS        + " TEXT, " +
                 CHAIRMAN            + " TEXT, " +
                 HOBBY               + " TEXT, " +
@@ -87,13 +83,12 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         db.execSQL(createStudent());
         Toast.makeText(context, "Create successfylly", Toast.LENGTH_SHORT).show();
     }
-
-    // Tableに何か追加するときとか削除するときとか。この関数に入ります
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SCHOOL_NAME);
         onCreate(sqLiteDatabase);
+        sqLiteDatabase.close();
 
     }
 
@@ -116,9 +111,45 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addAStudent(Student student) {
+        // write data in database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NAME, student.getName());
+        values.put(AGE, student.getAge());
+        values.put(SEX, student.getSex());
+        values.put(PHONENUMBER, student.getPhoneNumber());
+        values.put(DATE, student.getDate());
+        values.put(STUDENTCLASS, student.getStClass());
+        values.put(CHAIRMAN, student.getChairman());
+        values.put(HOBBY, student.getHobby());
+        values.put(GRADE, student.getGrade());
+
+        // insert data in database
+        db.insert(TABLE_NAME, null, values);
+        // close database
+        db.close();
+    }
+
+    public void addStudentInformation(Student student) {
+        // write data in database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DATE, student.getDate());
+        values.put(STUDENTCLASS, student.getStClass());
+        values.put(CHAIRMAN, student.getChairman());
+        values.put(HOBBY, student.getHobby());
+        values.put(GRADE, student.getGrade());
+
+        // insert data in database
+        db.insert(TABLE_NAME, null, values);
+        // close database
+        db.close();
+    }
+
     void InsertInformation(byte[] hinh, String date, String stClass, String chairman, String hobby, String grade) {
         SQLiteDatabase db = getWritableDatabase();
-        String sql="Insert into student values (null, null, null, null, null, ?, ?, ?, ?, ?, ?)";
+        String sql="Insert into student values ( ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement=db.compileStatement(sql);
         statement.clearBindings();
         statement.bindBlob(5,hinh);
@@ -128,29 +159,6 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         statement.bindString(9,hobby);
         statement.bindString(10,grade);
         statement.executeInsert();
-    }
-    /*
-    Select a student by ID
-     */
-    public Student getStudentById(int id) {
-        // take data from database
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME, new String[] {
-                        ID, NAME, AGE, SEX, PHONENUMBER }, ID + "=?",
-                new String[] {String.valueOf(id) },
-                null, null, null, null);
-        if(cursor != null) {
-            // doc tung tu 1 theo hang
-            cursor.moveToFirst();
-        }
-
-        assert cursor != null;
-        Student student = new Student(cursor.getString(1), cursor.getInt(2),
-                cursor.getString(3),cursor.getString(4));
-        cursor.close();
-        db.close();
-        return student;
     }
 
 
@@ -169,11 +177,19 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         return db.update(TABLE_NAME, values, ID + " = ?",
                 new String[] {String.valueOf(student.getId())});
     }
-     public int updateStudentPhone(Student student) {
+
+    /*
+    Update Student Information of student
+     */
+    public int updateStudentInformation(Student student) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        int b = student.getId();
+        values.put(DATE, student.getDate());
         values.put(PHONENUMBER, student.getPhoneNumber());
+        values.put(STUDENTCLASS, student.getStClass());
+        values.put(CHAIRMAN, student.getChairman());
+        values.put(HOBBY, student.getHobby());
+        values.put(GRADE, student.getGrade());
         return db.update(TABLE_NAME, values, ID + " = ?",
                 new String[] {String.valueOf(student.getId())});
     }
@@ -192,9 +208,9 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
         if(cursor.move(id)) {
             do {
                 // 今のIDはvaluesにいれる。入れてから＋１
-                 values.put(ID, id++);
+                values.put(ID, id++);
                 //  今のIDは次のIDに変更する
-                 db.update(TABLE_NAME, values, ID + " = ?",
+                db.update(TABLE_NAME, values, ID + " = ?",
                         new String[] {String.valueOf(id)});
             } while(cursor.moveToNext());
         }
@@ -261,6 +277,11 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
                 student.setAge(cursor.getInt(2));
                 student.setSex(cursor.getString(3));
                 student.setPhoneNumber(cursor.getString(4));
+                student.setDate(cursor.getString(5));
+                student.setStClass(cursor.getString(6));
+                student.setChairman(cursor.getString(7));
+                student.setHobby(cursor.getString(8));
+                student.setGrade(cursor.getString(9));
                 list.add(student);
 
             } while(cursor.moveToNext());
@@ -352,7 +373,8 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
             case 5:
                 values.put(SUBJECTS_THURSDAY, school.getSubjects_thursday());
                 break;
-            case 6: values.put(SUBJECTS_FRIDAY, school.getSubjects_friday());
+            case 6:
+                values.put(SUBJECTS_FRIDAY, school.getSubjects_friday());
                 break;
         }
 
@@ -394,16 +416,12 @@ public class DatabaseSQLite extends SQLiteOpenHelper {
     }
 
     private int getNotesCount() {
-
         String countQuery = "SELECT * FROM " + SCHOOL_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-
         int count = cursor.getCount();
         cursor.close();
         // return count
         return count;
     }
-
-
 }

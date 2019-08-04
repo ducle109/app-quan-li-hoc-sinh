@@ -1,13 +1,9 @@
 package jp.com.studentproject;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -16,12 +12,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
+import java.util.Objects;
 
 public class Student_Management extends AppCompatActivity {
+
     private EditText editId;
     private EditText editName;
     private EditText editAge;
@@ -32,10 +32,11 @@ public class Student_Management extends AppCompatActivity {
     private Button btnUpdate;
     private Button btnDelete;
     private Button btnCancel;
+    private RadioGroup radioGroupCharacter;
     private RadioButton radioButtonMale;
     private RadioButton radioButtonFemale;
 
-    public static DatabaseSQLite databaseSQLite;
+    private DatabaseSQLite databaseSQLite;
     private CustomAdapter customAdapter;
     private List<Student> studentList;
 
@@ -46,6 +47,7 @@ public class Student_Management extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student__management);
+
         databaseSQLite = new DatabaseSQLite(this);
         initWidget();
         studentList = databaseSQLite.getAllStudent();
@@ -68,7 +70,7 @@ public class Student_Management extends AppCompatActivity {
                     updateListStudent();
                     setAdapter();
                     setTextNull();
-                    hidenKeyBoard();
+                    //hidenKeyBoard();
                 }
             }
         });
@@ -100,30 +102,29 @@ public class Student_Management extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-            Student student = new Student();
-            student.setId(Integer.parseInt(String.valueOf(editId.getText())));
-            student.setName(editName.getText() + "");
-            student.setAge(Integer.parseInt(editAge.getText() + ""));
-            if(radioButtonMale.isChecked()) {
-                student.setSex("Male");
-            } else {
-                student.setSex("Famle");
-            }
-            student.setPhoneNumber(editPhone.getText() + "");
-            int result = databaseSQLite.updateStudent(student);
-            showToast("Updated !!!");
-            if(result > 0) {
-                updateListStudent();
-                setTextNull();
+                Student student = new Student();
+                student.setId(Integer.parseInt(String.valueOf(editId.getText())));
+                student.setName(editName.getText() + "");
+                student.setAge(Integer.parseInt(editAge.getText() + ""));
+                if(radioButtonMale.isChecked()) {
+                    student.setSex("Male");
+                } else {
+                    student.setSex("Famle");
+                }
+                student.setPhoneNumber(editPhone.getText() + "");
+                int result = databaseSQLite.updateStudent(student);
+                showToast("Updated !!!");
+                if(result > 0) {
+                    updateListStudent();
+                    setTextNull();
 
-            }
-            btnSave.setEnabled(true);
-            btnUpdate.setEnabled(false);
-            btnDelete.setEnabled(false);
-            hidenKeyBoard();
+                }
+                btnSave.setEnabled(true);
+                btnUpdate.setEnabled(false);
+                btnDelete.setEnabled(false);
+                hidenKeyBoard();
             }
         });
-
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,11 +155,10 @@ public class Student_Management extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Student student = studentList.get(pos);
-                student.setId(Integer.parseInt(String.valueOf(editId.getText())));
                 int result = databaseSQLite.deleteStudent(student.getId());
-                // 消したIDの後は1個ずつIDを下げさせる
-                databaseSQLite.updateStudentIDD(student);
-                // 長さが１つ減らす
+                Student student1 = new Student();
+                student1.setId(Integer.parseInt(String.valueOf(editId.getText())));
+                databaseSQLite.updateStudentIDD(student1);
                 databaseSQLite.updateID();
                 showToast("Deleted !!!");
                 if(result > 0) {
@@ -183,7 +183,6 @@ public class Student_Management extends AppCompatActivity {
 
     // check input data
     private Student createStudent() {
-
         String name = "";
         int age = 0;
         String sex = "";
@@ -210,7 +209,7 @@ public class Student_Management extends AppCompatActivity {
             showToast("Please check the SEX");
         } else {
             if(radioButtonMale.isChecked()) {
-                sex = (String) radioButtonMale.getText();
+                sex = radioButtonMale.getText().toString();
             }
 
             if(radioButtonFemale.isChecked()) {
@@ -232,7 +231,6 @@ public class Student_Management extends AppCompatActivity {
         return student;
     }
 
-
     public void initWidget() {
         editId                   = (EditText) findViewById(R.id.edt_id);
         editName                 = (EditText) findViewById(R.id.edt_name);
@@ -244,6 +242,7 @@ public class Student_Management extends AppCompatActivity {
         btnDelete                = (Button) findViewById(R.id.btn_delete);
         btnCancel                = (Button) findViewById(R.id.btn_cancel);
 
+        radioGroupCharacter    = (RadioGroup) findViewById(R.id.radioGroup_character);
         radioButtonMale         = (RadioButton) findViewById(R.id.radioButton_male);
         radioButtonFemale       = (RadioButton) findViewById(R.id.radioButton_female);
 
@@ -279,9 +278,8 @@ public class Student_Management extends AppCompatActivity {
 
     public void hidenKeyBoard() {
         InputMethodManager inputMethod = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethod.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        inputMethod.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus()).getWindowToken(), 0);
     }
-
     public void showToast(String msg) {
         Toast.makeText(Student_Management.this, msg, Toast.LENGTH_SHORT).show();
     }

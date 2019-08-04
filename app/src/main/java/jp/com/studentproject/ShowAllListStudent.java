@@ -1,39 +1,47 @@
 package jp.com.studentproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-public class ShowAllListStudent extends AppCompatActivity implements View.OnClickListener{
-    private ImageView imgAvatar;
-    private ImageView imgEditYear;
-    private ImageView imgEditPhone;
-    private ImageView imgEditClass;
-    private ImageView imgEditChairman;
-    private ImageView imgEditHobby;
-    private ImageView imgEditGrade;
-
+public class ShowAllListStudent extends AppCompatActivity implements View.OnClickListener {
+    TextView txtname;
+    TextView txtSex;
+    TextView txtAge;
+    TextView txtYear;
+    TextView txtPhone;
+    TextView txtClass;
+    TextView txtChairman;
+    TextView txtHobby;
+    TextView txtGrade;
     EditText edtYear;
     EditText edtPhone;
     EditText edtClass;
     EditText edtChairman;
     EditText edtHobby;
     EditText edtGrade;
-
+    private ImageView imgAvatar;
+    private Button btnDialogSave;
+    private Button btnDialogCancel;
+    private Dialog dialog1;
+    private Dialog dialog2;
     private ListView lvShowStudent;
-    private DatabaseSQLite databaseSQLite;
+    public static DatabaseSQLite databaseSQLite;
     private CustomAdapter customAdapter;
     private List<Student> studentList;
 
@@ -45,8 +53,6 @@ public class ShowAllListStudent extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all_list_student);
         init();
-
-
         databaseSQLite = new DatabaseSQLite(this);
         studentList = databaseSQLite.getAllStudent();
         setAdapter();
@@ -55,121 +61,202 @@ public class ShowAllListStudent extends AppCompatActivity implements View.OnClic
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Student student = studentList.get(position);
-                showDialog(student);
+                showEditDialog(student);
+                return true;
+            }
+        });
 
-                return false;
+        lvShowStudent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Student student = studentList.get(position);
+                showInformationDialog(student);
             }
         });
     }
 
+
     public byte[] ConverttoArrayByte(ImageView img) {
         BitmapDrawable bitmapDrawable = (BitmapDrawable) img.getDrawable();
-        Bitmap bitmap=bitmapDrawable.getBitmap();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
-    public void showDialog(Student student) {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.custom_dialog);
+    public void showEditDialog(Student student) {
+        dialog1 = new Dialog(ShowAllListStudent.this, R.style.Dialog);
+        dialog1.setTitle("Notification");
+        dialog1.setContentView(R.layout.custom_dialog);
 
-        edtYear            = (EditText) dialog.findViewById(R.id.edt_year);
-        edtPhone           = (EditText) dialog.findViewById(R.id.edt_phone);
-        edtClass           = (EditText) dialog.findViewById(R.id.edt_class);
-        edtChairman        = (EditText) dialog.findViewById(R.id.edt_chairman);
-        edtHobby           = (EditText) dialog.findViewById(R.id.edt_hobby);
-        edtGrade           = (EditText) dialog.findViewById(R.id.edt_grade);
-
-        // edt text
-        imgAvatar                  = (ImageView) dialog.findViewById(R.id.imgAvatar);
-        imgEditYear               = (ImageView) dialog.findViewById(R.id.img_edt_year);
-        imgEditYear               = (ImageView) dialog.findViewById(R.id.img_edt_year);
-        imgEditPhone              = (ImageView) dialog.findViewById(R.id.img_edt_phone);
-        imgEditClass              = (ImageView) dialog.findViewById(R.id.img_edt_class);
-        imgEditChairman           = (ImageView)dialog. findViewById(R.id.img_edt_chairman);
-        imgEditHobby              = (ImageView) dialog.findViewById(R.id.img_edt_hobby);
-        imgEditGrade              = (ImageView) dialog.findViewById(R.id.img_edt_grade);
+        // show text information
+        getShowEditInformation(student);
 
         imgAvatar.setOnClickListener(this);
-        imgEditYear.setOnClickListener(this);
-        imgEditPhone.setOnClickListener(this);
-        imgEditClass.setOnClickListener(this);
-        imgEditChairman.setOnClickListener(this);
-        imgEditHobby.setOnClickListener(this);
-        imgEditGrade.setOnClickListener(this);
+        btnDialogSave.setOnClickListener(this);
 
-        edtPhone.setText(student.getPhoneNumber().toString());
-        getID = student.getId();
+        // cancel
+        btnDialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog1.dismiss();
+            }
+        });
 
-        dialog.show();
+        dialog1.show();
     }
+
+    public void showInformationDialog(Student student) {
+        dialog2 = new Dialog(this, R.style.Dialog);
+        dialog2.setTitle("Information");
+        dialog2.setContentView(R.layout.dialog_show_information);
+
+        getShowInformation(student);
+        dialog2.show();
+    }
+
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.imgAvatar:
-                //databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                imgAvatar.requestFocus();
-                showToast("edit ok avatar");
-                break;
-            case R.id.img_edt_year:
-                databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                edtYear.requestFocus();
-                showToast("edit ok year");
-                break;
-             case R.id.img_edt_phone:
-                 Student student = new Student();
-                 student.setId(getID);
-                 student.setPhoneNumber(edtPhone.getText().toString());
-                 databaseSQLite.updateStudentPhone(student);
-                 studentList.clear();
-                 studentList.addAll(databaseSQLite.getAllStudent());
-                 customAdapter.notifyDataSetChanged();
+        Student student = new Student();
+        student.setId(getID);
+        student.setDate(edtYear.getText().toString());
+        student.setPhoneNumber(edtPhone.getText().toString());
+        student.setStClass(edtClass.getText().toString());
+        student.setChairman(edtChairman.getText().toString());
+        student.setHobby(edtHobby.getText().toString());
+        student.setGrade(edtGrade.getText().toString());
+        databaseSQLite.updateStudentInformation(student);
+        studentList.clear();
+        studentList.addAll(databaseSQLite.getAllStudent());
+        customAdapter.notifyDataSetChanged();
+        dialog1.dismiss();
+        showToast("save");
+    }    // create student information
 
-                 showToast("edit ok phone");
-                 break;
-             case R.id.img_edt_class:
-                 databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                 edtClass.requestFocus();
-                 showToast("edit ok class");
-                 break;
-             case R.id.img_edt_chairman:
-                 databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                 edtChairman.requestFocus();
-                 showToast("edit ok chairman");
-                break;
-             case R.id.img_edt_hobby:
-                 databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                 edtHobby.requestFocus();
-                showToast("edit ok hobby");
-                break;
-             case R.id.img_edt_grade:
-                 databaseSQLite.InsertInformation(ConverttoArrayByte(imgAvatar), edtYear.getText().toString(),edtClass.getText().toString(),edtChairman.getText().toString(),edtHobby.getText().toString(),edtGrade.getText().toString());
-                 edtGrade.requestFocus();
-                 showToast("edit ok grade");
-                break;
-        }
+
+    @SuppressLint("SetTextI18n")
+    public void getShowEditInformation(Student student) {
+        txtname   = (TextView) dialog1.findViewById(R.id.txt_show_name);
+        txtSex    = (TextView) dialog1.findViewById(R.id.txt_show_sex);
+        txtAge    = (TextView) dialog1.findViewById(R.id.txt_show_age);
+
+        edtYear = (EditText) dialog1.findViewById(R.id.edt_year);
+        edtPhone = (EditText) dialog1.findViewById(R.id.edt_phone);
+        edtClass = (EditText) dialog1.findViewById(R.id.edt_class);
+        edtChairman = (EditText) dialog1.findViewById(R.id.edt_chairman);
+        edtHobby = (EditText) dialog1.findViewById(R.id.edt_hobby);
+        edtGrade = (EditText) dialog1.findViewById(R.id.edt_grade);
+
+        // edt text
+        imgAvatar        = (ImageView) dialog1.findViewById(R.id.imgAvatar);
+        btnDialogSave   = (Button) dialog1.findViewById(R.id.btn_dialog_save);
+        btnDialogCancel = (Button) dialog1.findViewById(R.id.btn_dialog_cancel);
+
+        txtname.setText(student.getName());
+        txtSex.setText(student.getSex());
+        txtAge.setText(student.getAge() + "");
+        edtYear.setText(student.getDate());
+        edtPhone.setText(student.getPhoneNumber());
+        edtClass.setText(student.getStClass());
+        edtChairman.setText(student.getChairman());
+        edtHobby.setText(student.getHobby());
+        edtGrade.setText(student.getGrade());
+
+        getID = student.getId();
     }
 
+    @SuppressLint("SetTextI18n")
+    public void getShowInformation(Student student) {
+        txtname = (TextView) dialog2.findViewById(R.id.txt_get_name);
+        txtSex = (TextView) dialog2.findViewById(R.id.txt_get_sex);
+        txtAge = (TextView) dialog2.findViewById(R.id.txt_get_age);
+        txtYear = (TextView) dialog2.findViewById(R.id.txt_get_year);
+        txtPhone = (TextView) dialog2.findViewById(R.id.txt_get_phone);
+        txtClass = (TextView) dialog2.findViewById(R.id.txt_get_class);
+        txtChairman = (TextView) dialog2.findViewById(R.id.txt_get_chairman);
+        txtHobby = (TextView) dialog2.findViewById(R.id.txt_get_hobby);
+        txtGrade = (TextView) dialog2.findViewById(R.id.txt_get_grade);
+
+        txtname.setText(student.getName());
+        txtSex.setText(student.getSex());
+        txtAge.setText(student.getAge() + "");
+        txtYear.setText(student.getDate());
+        txtPhone.setText(student.getPhoneNumber());
+        txtClass.setText(student.getStClass());
+        txtChairman.setText(student.getChairman());
+        txtHobby.setText(student.getHobby());
+        txtGrade.setText(student.getGrade());
+
+    }
+
+
     public void setAdapter() {
-        if(customAdapter == null) {
+        if (customAdapter == null) {
             customAdapter = new CustomAdapter(this, R.layout.activity_show_all_list_student, studentList);
             lvShowStudent.setAdapter(customAdapter);
         } else {
             customAdapter.notifyDataSetChanged();
-            lvShowStudent.setSelection(customAdapter.getCount() -1);
+            lvShowStudent.setSelection(customAdapter.getCount() - 1);
         }
     }
 
     public void init() {
+
         lvShowStudent = (ListView) findViewById(R.id.lvShowStudent);
     }
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
     }
 
 
 }
+
+/*
+public Student createStudentInformation() {
+        String date = "";
+        String stClass = "";
+        String chairman = "";
+        String hobby = "";
+        String grade = "";
+        Student student = null;
+        String ckDate = edtYear.getText().toString();
+        String ckStClass = edtClass.getText().toString();
+        String ckChairman = edtChairman.getText().toString();
+        String ckHobby = edtHobby.getText().toString();
+        String ckGrade = edtGrade.getText().toString();
+        if (ckDate.isEmpty()) {
+            showToast("Please enter the Date");
+        } else {
+            date = ckDate;
+        }
+        if (ckStClass.isEmpty()) {
+            showToast("Please enter the Class");
+        } else {
+            stClass = ckStClass;
+        }
+        if (ckChairman.isEmpty()) {
+            showToast("Please enter the Chairman");
+        } else {
+            chairman = ckChairman;
+        }
+        if (ckHobby.isEmpty()) {
+            showToast("Please enter the Hobby");
+        } else {
+            hobby = ckHobby;
+        }
+        if (ckGrade.isEmpty()) {
+            showToast("Please enter the Grade");
+        } else {
+            grade = ckGrade;
+        }
+        if (!date.isEmpty() && !stClass.isEmpty() && !chairman.isEmpty() && !hobby.isEmpty() && !grade.isEmpty()) {
+            student = new Student(date, stClass, chairman, hobby, grade);
+        } else {
+            showToast("Please complete all information");
+        }
+        return student;
+    }*/

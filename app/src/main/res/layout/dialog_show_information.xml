@@ -30,11 +30,11 @@
                     android:text="Name : "
                     />
                 <TextView
-                    android:id="@+id/txt_show_name"
+                    android:id="@+id/txt_get_name"
                     android:textSize="16dp"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Le "
+                    android:text="Le Duc"
                     />
             </LinearLayout>
             <LinearLayout
@@ -48,7 +48,7 @@
                     android:text="Sex: "
                     />
                 <TextView
-                    android:id="@+id/txt_show_sex"
+                    android:id="@+id/txt_get_sex"
                     android:textSize="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     android:text="Age: "
                     />
                 <TextView
-                    android:id="@+id/txt_show_age"
+                    android:id="@+id/txt_get_age"
                     android:textSize="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,9 +93,9 @@
                 android:text="Entrance date  "
                 android:padding="5dp"
                 />
-            <EditText
-                android:id="@+id/edt_year"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_year"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- 2015/10/1 "
@@ -112,9 +112,9 @@
                 android:layout_height="wrap_content"
                 android:text="Telephone  "
                 />
-            <EditText
-                android:id="@+id/edt_phone"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_phone"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- 0123456789 "
@@ -133,9 +133,9 @@
                 android:layout_height="wrap_content"
                 android:text="Class "
                 />
-            <EditText
-                android:id="@+id/edt_class"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_class"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- 12A1 "
@@ -150,9 +150,9 @@
                 android:padding="5dp"
                 android:layout_height="wrap_content"
                 android:text="Chairman " />
-            <EditText
-                android:id="@+id/edt_chairman"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_chairman"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- leduc "
@@ -170,9 +170,9 @@
                 android:layout_height="wrap_content"
                 android:text="Hobby "
                 />
-            <EditText
-                android:id="@+id/edt_hobby"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_hobby"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- game "
@@ -188,34 +188,13 @@
                 android:layout_height="wrap_content"
                 android:text="Grade : "
                 />
-            <EditText
-                android:id="@+id/edt_grade"
-                android:ems="6"
+            <TextView
+                android:id="@+id/txt_get_grade"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- Good "
                 tools:ignore="InvalidId" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_marginTop="10dp"
-            android:paddingLeft="40dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btn_dialog_save"
-                android:background="#8BC34A"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save" />
-
-            <Button
-                android:id="@+id/btn_dialog_cancel"
-                android:layout_marginLeft="5dp"
-                android:background="#03A9F4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel" />
         </LinearLayout>
     </LinearLayout>
 
